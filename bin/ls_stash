@@ -22,17 +22,18 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 require 'thor'
 require 'ls_stash/rest'
+require 'ls_stash/render'
 
 # Main class with Thor
 class LsStash < Thor
-  class_option :verbose, type: :boolean
+  class_option :verbose, type: :boolean, aliases: :v
   class_option :prettify, type: :boolean, default: true
   class_option :user, type: :string, required: true
   class_option :password, type: :string, required: true
 
   desc 'projects STASH_URL', 'Lists all stash projects'
   def projects(stash_url)
-    puts rest_request(stash_url, '/rest/api/1.0/projects', options)
+    render(rest_request(stash_url, '/rest/api/1.0/projects', options))
   end
 
   desc 'repos STASH_URL', 'Lists stash repositories'
