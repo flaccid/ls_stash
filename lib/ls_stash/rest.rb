@@ -11,8 +11,8 @@ def rest_request(endpoint, href, options)
   request = Net::HTTP::Get.new(uri.request_uri)
   request.basic_auth(options[:user], options[:password])
   if options[:prettify]
-    JSON.parse(http.request(request).body)
-  else
     JSON.pretty_generate(JSON.parse(http.request(request).body))
+  else
+    JSON.parse(http.request(request).body)
   end
 end
