@@ -1,0 +1,16 @@
+PATH
+  remote: .
+  specs:
+    ls_stash (0.0.1)
+      thor
+
+GEM
+  remote: https://tokyo-m.rubygems.org/
+  specs:
+    thor (0.19.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ls_stash!
