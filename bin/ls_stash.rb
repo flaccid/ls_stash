@@ -18,47 +18,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'rubygems'
-require 'thor'
-require 'net/http'
-require 'net/https'
-require 'uri'
-require 'json'
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
-def rest_request(endpoint, href, user, password, verbose = false, prettify = true)
-  uri = URI.join(endpoint, href)
-  puts "[GET] #{uri}" if verbose
-  http = Net::HTTP.new(uri.host, uri.port)
-  http.use_ssl = true
-  request = Net::HTTP::Get.new(uri.request_uri)
-  request.basic_auth(user, password)
-  if prettify
-    JSON.parse(http.request(request).body)
-  else
-    JSON.pretty_generate(JSON.parse(http.request(request).body))
-  end
-end
+require 'thor'
+require 'ls_stash/rest'
 
 # Main class with Thor
 class LsStash < Thor
   class_option :verbose, type: :boolean
+  class_option :prettify, type: :boolean, default: true
   class_option :user, type: :string, required: true
   class_option :password, type: :string, required: true
 
   desc 'projects STASH_URL', 'Lists all stash projects'
   def projects(stash_url)
-    puts rest_request(stash_url, '/rest/api/1.0/projects', options[:user], options[:password], options[:verbose])
+    puts rest_request(stash_url, '/rest/api/1.0/projects', options)
   end
 
   desc 'repos STASH_URL', 'Lists stash repositories'
   options all: :boolean
   option :all, type: :boolean, aliases: :a
-  def repos(stash_url)
-    projects = JSON.parse(rest_request(stash_url, '/rest/api/1.0/projects', options[:user], options[:password], options[:verbose]))
-    repositories = []
+  def repos(stash_url, repositories = [])
+    projects = rest_request(stash_url, '/rest/api/1.0/projects', options)
     projects['values'].each do |project|
-      project_repositories = JSON.parse(rest_request(stash_url, "/rest/api/1.0/projects/#{project['key']}/repos", options[:user], options[:password], options[:verbose]))
-      project_repositories['values'].each do |repo|
+      href = "/rest/api/1.0/projects/#{project['key']}/repos"
+      rest_request(stash_url, href, options)['values'].each do |repo|
         clone = repo['links']['clone'][0]['href']
         repositories.push(clone) if clone.include? 'ssh://'
       end

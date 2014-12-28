@@ -1,0 +1,7 @@
+# 10 is a little unrealistic early on
+MethodLength:
+  Max: 15
+
+# re-visit this later
+Metrics/AbcSize:
+  Enabled: false
