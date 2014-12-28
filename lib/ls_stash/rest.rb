@@ -3,6 +3,7 @@ require 'net/https'
 require 'uri'
 require 'json'
 
+# returns json
 def rest_request(endpoint, href, options)
   uri = URI.join(endpoint, href)
   puts "[GET] #{uri}" if options[:verbose]
@@ -10,9 +11,5 @@ def rest_request(endpoint, href, options)
   http.use_ssl = true
   request = Net::HTTP::Get.new(uri.request_uri)
   request.basic_auth(options[:user], options[:password])
-  if options[:prettify]
-    JSON.pretty_generate(JSON.parse(http.request(request).body))
-  else
-    JSON.parse(http.request(request).body)
-  end
+  JSON.parse(http.request(request).body)
 end
