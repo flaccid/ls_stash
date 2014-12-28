@@ -1,3 +1,7 @@
+AllCops:
+  Exclude:
+  - 'vendor/**/*'
+
 # 10 is a little unrealistic early on
 MethodLength:
   Max: 15
