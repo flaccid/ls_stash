@@ -14,7 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-def render(json, prettify = true)
+def render(text)
+  puts text
+end
+
+def render_json(json, prettify = true)
   if prettify
     puts JSON.pretty_generate(json)
   else
